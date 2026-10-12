@@ -1,6 +1,6 @@
 # agoracls: csPCa classification from biparametric MRI
 
-Code for the paper *[title to be added]*. It trains and evaluates models that classify
+Code for the paper *Generalist Radiology Foundation Models versus Native 3D CNNs for Weakly-Supervised Prostate Cancer Classification on Biparametric MRI*. It trains and evaluates models that classify
 clinically significant prostate cancer (csPCa) from biparametric MRI (T2W, ADC, high-b DWI),
 optionally fused with clinical variables (age, PSA, PSA density, prostate volume).
 
