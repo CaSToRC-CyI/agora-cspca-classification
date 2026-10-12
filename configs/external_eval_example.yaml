@@ -1,0 +1,62 @@
+# Example external-dataset evaluation config.
+#
+# Consumed by:
+#   src/agora/scripts/prepare_external_data.py          (step 0: resample + label csv)
+#   src/agora/scripts/prepare_external_segmentations.py (steps 1/3: prostate masks)
+#   src/agora/scripts/evaluate_external.py              (step 4: evaluate)
+#
+# Resampled on-disk layout produced by step 0 (paths relative to data_dir):
+#   data_dir/<image_subdir>/{study_id}_{t2w,adc,hbv}.nii.gz   <- canonical tokens
+#   data_dir/<seg_dir>/{study_id}.nii.gz                      <- prostate masks (REQUIRED)
+#
+# prepare_external_data.py always WRITES the canonical t2w/adc/hbv tokens, so the
+# downstream loader can read them regardless of how the RAW inputs were named.
+#
+# Prerequisite: generate prostate masks with the SAME nnUNet model used for the
+# training cohorts (Task005_Prostate, 3d_fullres) before evaluating, e.g.:
+#   uv run python src/agora/scripts/prepare_external_segmentations.py \
+#       --external-config configs/external_eval_example.yaml --stage prepare
+#   nnUNet_predict -i <input_dir> -o <output_dir> -t 5 -m 3d_fullres   # in nnUNet venv
+#   uv run python src/agora/scripts/prepare_external_segmentations.py \
+#       --external-config configs/external_eval_example.yaml --stage transfer
+
+external_eval:
+  name: prostate158                       # cache discriminator / output label
+  data_dir: data
+  image_subdir: Prostate158_pre/all_resampled
+  seg_dir: prostate158_segmentations      # masks land here (created by the helper)
+  file_format: nii.gz                     # nii.gz | mha
+  csv_file: data/combined_labels.csv
+  cache_dir: data/preprocessed_cache
+
+  # MUST match the trained model's training target_shape.
+  target_shape: [25, 150, 150]
+
+  # Optional JSON remap of raw study_id -> id used in csv_file (omit if they match).
+  # id_map: /path/to/id_map.json
+
+  cspca_threshold: 7.0
+  cache_tag: ""
+  labeled: true                           # false -> predictions only, metrics skipped
+
+  batch_size: 4
+  num_workers: 8
+
+  # --- step 0 only (prepare_external_data.py); ignored by evaluate_external.py ---
+  #
+  # input_layout: how to find raw modality files under --input-dir. Each pattern
+  # holds a single {study} placeholder (becomes the study_id). Defaults to the
+  # flat picai/goc convention "{study}_t2w.nii.gz" etc. if omitted.
+  #
+  # prostate158-style per-case folders:
+  input_layout:
+    t2:  "{study}/t2.nii.gz"
+    adc: "{study}/adc.nii.gz"
+    dwi: "{study}/dwi.nii.gz"
+
+  # label_mode: how step 0 derives the binary `label` column written to csv_file.
+  #   none -> no label column (set labeled: false above; predictions only)
+  #   csv  -> join a ready-made binary 0/1 column from --source-csv via --label-col
+  # Cohorts whose labels must be *derived* (e.g. from a tumor mask's presence)
+  # need a small dataset-specific script to build that source CSV first.
+  label_mode: csv

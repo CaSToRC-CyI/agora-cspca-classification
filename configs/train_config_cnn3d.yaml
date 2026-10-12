@@ -1,0 +1,35 @@
+model:
+    model_name: "CNN3D"
+    model_v: "v0" # Model version v0...vn - V0 is the base model
+    cls_num_classes: 1 # 1 for binary classification
+    att_fusion: True
+    img_pooling: "flatten" # att_fusion image tokens: flatten | gap
+    use_clinical: True
+    clin_feature_dim: 32
+    clin_input_dim: 4
+    img_feature_dim: 320
+    cls_dropout_p: 0.2
+training:
+    cache_tag: "fullgoc"
+    data_dir: "data"
+    csv_file: "data/combined_lesion_allds_gs.csv"
+    goc_id_map: "data/GOC_Data/anonymid_studyid_map_v4.json"
+    target_shape: [25, 150, 150]
+    cache_dir: "data/preprocessed_cache"
+    output_dir: "results/training_outputs"
+    checkpoint_dir: null
+    datasets: "picai+goc"
+    cspca_threshold: 7.0
+    loss_fn: "bce"
+    optimizer: "adamw"
+    batch_size: 32
+    num_epochs: 80
+    learning_rate: 0.0002421789342995739
+    weight_decay: 8.109460182503038e-6
+    warmup_frac: 0.2 # 0.1 for flatten-vs-GAP ablation runs
+    num_workers: 10
+    log_frequency: 10
+    save_frequency: 10
+    val_split: 0.2
+    weighted_sampling: False
+    seed: 42

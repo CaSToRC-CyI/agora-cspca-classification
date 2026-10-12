@@ -1,0 +1,38 @@
+model:
+    model_name: "hf_hub:Snarcy/RadioDino-b16"
+    pretrained: True
+    enc_num_classes: 0 # Returns embeddings if 0
+    cls_num_classes: 1 # 1 for binary classification
+    att_fusion: True
+    use_clinical: True
+    clin_feature_dim: 32
+    clin_input_dim: 4
+    img_feature_dim: 256
+    use_dense_features: True
+    cls_dropout_p: 0.2
+training:
+    data_dir: "data"
+    csv_file: "data/combined_lesion_allds_gs.csv"
+    goc_id_map: "data/GOC_Data/anonymid_studyid_map_v3.json"
+    target_shape: [25, 150, 150]
+    cache_dir: "data/preprocessed_cache"
+    output_dir: "results/tune_outputs"
+    checkpoint_dir: null
+    datasets: "picai+goc"
+    cspca_threshold: 7.0
+    loss_fn: "bce"
+    optimizer: "adamw"
+    batch_size: 8
+    num_epochs: 80
+    learning_rate: 0.000005 # 0.00010138276265997924
+    weight_decay: 0.000001 # 0.00001141251002662887
+    finetune_lr: 0.00001
+    finetune_wd: 0.00001
+    num_workers: 10
+    log_frequency: 10
+    save_frequency: 10
+    val_split: 0.2
+    weighted_sampling: False
+    finetune: True
+    finetune_t: "v2"
+    seed: 44
