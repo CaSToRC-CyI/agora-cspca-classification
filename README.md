@@ -39,8 +39,8 @@ Requirements: Linux, an NVIDIA GPU with CUDA 12 (the data pipeline uses CuPy), a
 [uv](https://docs.astral.sh/uv/). Tested with Python 3.10.
 
 ```bash
-git clone https://github.com/CaSToRC-CyI/agora-cspca.git
-cd agora-cspca
+git clone https://github.com/CaSToRC-CyI/agora-cspca-classification.git
+cd agora-cspca-classification
 uv sync --python 3.10 --locked
 ```
 
