@@ -155,9 +155,7 @@ The scripts split the work into chunks for SLURM job arrays (chunk index from
 
 ## Data availability
 
-PI-CAI is publicly available from the link above. The in-house cohort is not publicly
-available; it can be requested from the corresponding author with reasonable
-justification, subject to ethics approval.
+PI-CAI is publicly available from the link above. The GMI (GOC) dataset used during the current study is not publicly available due to patient privacy restrictions and the terms of the ethics approval, and therefore cannot be shared.
 
 ## Citation
 
